@@ -1,15 +1,10 @@
 // @flow
-import { hashHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 import React, { Component } from 'react';
-import { Layout, Menu, Icon } from 'antd';
-import { Link } from 'react-router';
+import { Layout, Menu } from 'antd';
 const { Header, Content } = Layout;
 
-export default class App extends Component {
-
-  props: {
-    children: HTMLElement
-  };
+export default class RootLayout extends Component {
 
   constructor(props) {
     super(props);
@@ -17,7 +12,8 @@ export default class App extends Component {
   }
 
   handleClick(item, key, keyPath) {
-    hashHistory.push(item.key);
+    console.log(item, key, keyPath);
+    browserHistory.push('/experimental');
   }
 
   render() {
@@ -32,8 +28,9 @@ export default class App extends Component {
             defaultSelectedKeys={['2']}
             style={{ lineHeight: '64px' }}
           >
-            <Menu.Item key="/"><Icon type="home"/></Menu.Item>
+            <Menu.Item key="/">Home</Menu.Item>
             <Menu.Item key="/experimental">Experimental</Menu.Item>
+            <Menu.Item key="3">nav 3</Menu.Item>
           </Menu>
         </Header>
         <Content style={{ padding: '0 0' }}>
