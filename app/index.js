@@ -11,6 +11,12 @@ import './app.global.css';
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
 
+import Datastore from 'nedb';
+
+const itemsRepo = new Datastore({
+  filename: './data/test.db'
+});
+
 render(
   <Provider store={store}>
     <Router history={history} routes={routes}/>

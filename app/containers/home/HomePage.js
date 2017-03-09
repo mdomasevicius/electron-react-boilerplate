@@ -1,18 +1,17 @@
-// @flow
-import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb, Tabs, Icon } from 'antd';
-const {TabPane} = Tabs
-const { Header, Content, Footer } = Layout;
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import Items from '../../components/item/Items';
+import * as ItemActions from '../../actions/item-actions';
 
-export default class TabNavigationPage extends Component {
-  render() {
-    return (
-      <Tabs defaultActiveKey="h1">
-        <TabPane tab={<span><Icon type="home"/></span>}  key="h1">
-          Items
-        </TabPane>
-        <TabPane tab="Experimental" key="h2">Content of Tab Pane 2</TabPane>
-      </Tabs>
-    );
-  }
+function mapStateToProps(state) {
+  return {
+    createEditModalVisible: state.items.createEditModalVisible,
+    items: state.items.items
+  };
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ItemActions, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Items);
