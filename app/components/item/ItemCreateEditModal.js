@@ -3,12 +3,14 @@ import React, {Component} from "react";
 import {Row, Col, Modal, Input, Button, Upload} from "antd";
 
 const initialState = {
-  name: '',
-  factoryReferenceNumber: '',
-  referenceNumber: '',
-  imageUri: '',
-  fileName: '',
-  selectedFile: null
+  item: {
+    name: '',
+    factoryReferenceNumber: '',
+    referenceNumber: '',
+    imageUri: '',
+    fileName: '',
+    selectedFiles: []
+  }
 };
 
 class Items extends Component {
@@ -16,26 +18,16 @@ class Items extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {...initialState};
-
-    const {item} = props;
-    this.state = {item: item};
     this.onOk = this.onOk.bind(this);
     this.onCancel = this.onCancel.bind(this);
   }
 
   onOk(e) {
-    const item = {
-      name: this.state.name,
-      factoryReferenceNumber: this.state.factoryReferenceNumber,
-      referenceNumber: this.state.referenceNumber,
-      imageUri: '',
-      imageName: ''
-    };
+    const item = this.state.item;
 
-    if (this.state.selectedFile) {
-      item.imageUri = this.state.selectedFile[0].originFileObj.path;
-      item.imageName = this.state.selectedFile[0].originFileObj.name;
+    if (this.state.selectedFiles && this.state.selectedFiles.length == 1) {
+      item.imageUri = this.state.selectedFiles[0].originFileObj.path;
+      item.imageName = this.state.selectedFiles[0].originFileObj.name;
     }
 
     this.props.onOk(item);
@@ -49,7 +41,7 @@ class Items extends Component {
   }
 
   handleInputChange(fieldName, event) {
-    let partialState = {};
+    let item = this.state.item;
 
     /**
      * For ??reasons?? antd <InputNumber/> passes `event.target.value` directly instead of `event`
@@ -60,18 +52,24 @@ class Items extends Component {
     } else {
       value = event.target.value
     }
-    partialState[fieldName] = value;
-    this.setState(partialState)
+
+    item[fieldName] = value;
+    this.setState({item: item})
   }
 
   handleOnFileChange(e) {
     let fileList = e.fileList;
     fileList = fileList.slice(-1);
-    this.setState({selectedFile: fileList});
+    this.setState({selectedFiles: fileList});
+  }
+
+  componentWillMount() {
+    this.state = {...initialState};
+    const {item} = this.props;
+    this.setState({item: item});
   }
 
   render() {
-
     const uploadProps = {
       multiple: false,
       onChange: this.handleOnFileChange.bind(this),
@@ -79,7 +77,7 @@ class Items extends Component {
 
     return (
       <Modal
-        title="a"
+        title={this.state.item._id ? 'Item Edit' : 'Item Create'}
         visible={this.props.visible}
         onOk={this.onOk}
         onCancel={this.onCancel}
@@ -89,7 +87,7 @@ class Items extends Component {
           <Col span={20}>
             <Input
               size="large"
-              value={this.state.name}
+              value={this.state.item.name}
               onChange={this.handleInputChange.bind(this, 'name')}/>
           </Col>
           <br/>
@@ -97,7 +95,7 @@ class Items extends Component {
           <Col span={20}>
             <Input
               size="large"
-              value={this.state.factoryReferenceNumber}
+              value={this.state.item.factoryReferenceNumber}
               onChange={this.handleInputChange.bind(this, 'factoryReferenceNumber')}
             />
           </Col>
@@ -106,7 +104,7 @@ class Items extends Component {
           <Col span={20}>
             <Input
               size="large"
-              value={this.state.referenceNumber}
+              value={this.state.item.referenceNumber}
               onChange={this.handleInputChange.bind(this, 'referenceNumber')}
             />
           </Col>
@@ -114,7 +112,7 @@ class Items extends Component {
           <Col span={24}>
             <Upload
               {...uploadProps}
-              fileList={this.state.selectedFile}
+              fileList={this.state.selectedFiles}
               listType="picture"
               onPreview={() => {}}
             >

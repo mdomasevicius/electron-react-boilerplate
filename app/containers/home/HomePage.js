@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Items from '../../components/item/Items';
+import Home from '../../components/item/Home';
 import * as ItemActions from '../../actions/item-actions';
 
 function mapStateToProps(state) {
@@ -14,4 +14,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(ItemActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Items);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

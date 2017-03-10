@@ -14,7 +14,7 @@ import {
 
 import ItemCreateEditModal from './ItemCreateEditModal'
 
-class Items extends Component {
+class Home extends Component {
 
   constructor(props) {
     super(props);
@@ -33,7 +33,6 @@ class Items extends Component {
   }
 
   closeCreateEditModal(e) {
-    console.log(this);
     this.props.closeCreateEditModal();
     this.props.loadItems();
     this.setState({editItem: {}});
@@ -48,7 +47,6 @@ class Items extends Component {
   onItemEdit(item) {
     this.setState({editItem: item});
     this.props.openCreateEditModal();
-    console.log(this);
   }
 
   onItemDelete(item) {
@@ -57,7 +55,6 @@ class Items extends Component {
   }
 
   componentDidMount() {
-    console.log('mounted');
     this.props.loadItems();
   }
 
@@ -68,6 +65,7 @@ class Items extends Component {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => a.name.length - b.name.length,
     }, {
       title: 'Factory Reference No',
       dataIndex: 'factoryReferenceNumber',
@@ -83,9 +81,11 @@ class Items extends Component {
       render: (text, record) => {
         if (text) {
           return (
-            <Popover content={
+            <Popover
+              placement="left"
+              content={
                 <img
-                  width="300px"
+                  width="400px"
                   src={record.imageUri}/>
               }>
               <Button type="primary">{record.imageName}</Button>
@@ -101,7 +101,11 @@ class Items extends Component {
       render: (text, item) => (
         <span>
           <Button size="small" onClick={this.onItemEdit.bind(this, item)}>Edit</Button>
-          <Popconfirm onConfirm={this.onItemDelete.bind(this, item)} title={'Delete ' + item.name}>
+          <Popconfirm
+            placement="left"
+            size="large"
+            onConfirm={this.onItemDelete.bind(this, item)}
+            title={'Delete ' + item.name}>
             <Button size="small" type="danger">Delete</Button>
           </Popconfirm>
         </span>
@@ -111,10 +115,12 @@ class Items extends Component {
     const config = {
       bordered: true,
       loading: false,
-      pagination: true,
       size: 'default',
       rowSelection: {},
       scroll: undefined,
+      pagination: {
+        showQuickJumper: true
+      }
     };
 
     return (
@@ -139,14 +145,19 @@ class Items extends Component {
             columns={columns}
           />
         </Row>
+
+        { createEditModalVisible ?
         <ItemCreateEditModal
           item={this.state.editItem}
           onOk={this.onItemSaveUpdate}
           close={this.closeCreateEditModal}
           visible={createEditModalVisible}/>
+          :
+          <span></span>
+         }
       </div>
     );
   }
 }
 
-export default Items;
+export default Home;

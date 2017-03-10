@@ -8,6 +8,9 @@ import routes from './routes';
 import configureStore from './store/configureStore';
 import './app.global.css';
 
+import {LocaleProvider} from 'antd';
+import enUS from 'antd/lib/locale-provider/en_US';
+
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
 
@@ -17,9 +20,12 @@ const itemsRepo = new Datastore({
   filename: './data/test.db'
 });
 
+
 render(
-  <Provider store={store}>
-    <Router history={history} routes={routes}/>
-  </Provider>,
+  <LocaleProvider locale={enUS}>
+    <Provider store={store}>
+      <Router history={history} routes={routes}/>
+    </Provider>
+  </LocaleProvider>,
   document.getElementById('root')
 );

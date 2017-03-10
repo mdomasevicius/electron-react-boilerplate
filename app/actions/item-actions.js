@@ -40,9 +40,13 @@ function _loadItems(items) {
 }
 
 export function saveItem(item) {
-  itemsRepo.insert(item, (err, newItem) => {
-    console.log(err, newItem);
-  });
+  if (item._id) {
+    itemsRepo.update({ _id: item._id }, item, {}, (err, newItem) => {
+    });
+  } else {
+    itemsRepo.insert(item, (err, newItem) => {
+    });
+  }
   return {
     type: SAVE_ITEM
   };
@@ -50,7 +54,6 @@ export function saveItem(item) {
 
 export function deleteItem(item) {
   itemsRepo.remove({_id: item._id}, (err, removedItem) => {
-    console.log(err, removedItem);
   });
   return {
     type: DELETE_ITEM

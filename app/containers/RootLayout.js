@@ -12,7 +12,6 @@ export default class RootLayout extends Component {
   }
 
   handleClick(item, key, keyPath) {
-    console.log(item, key, keyPath);
     browserHistory.push('/experimental');
   }
 
